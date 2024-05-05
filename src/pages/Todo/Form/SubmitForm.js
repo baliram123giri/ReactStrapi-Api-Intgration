@@ -1,18 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { createTodo } from '../services';
+import { globlContext } from '../../../Provider/Provider';
 const { TextArea } = Input
 
 
 const SubmitForm = () => {
     const [loading, setLoading] = useState(false)
+    //using context api
+    const { values: ReducerValues } = useContext(globlContext)
     const formRef = useRef(null)
     const onFinish = async (values) => {
         setLoading(true)
         await createTodo({ data: values })
         // alert("Added Successfully")
-        setLoading(false)
+        await ReducerValues?.refecthTodoDataApi()
         formRef.current.resetFields()
+        setLoading(false)
     };
 
     return <Form

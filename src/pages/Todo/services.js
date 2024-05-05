@@ -23,3 +23,14 @@ export const getTodoList = async () => {
         console.log(error.response)
     }
 }
+export const deleteTodo = async (id) => {
+    try {
+        //crreate an request to the server
+        const data = await fetch(`http://localhost:1337/api/todos/${id}`,{
+            method: 'DELETE'
+        })
+        return await data.json()
+    } catch (error) {
+        console.log(error.response)
+    }
+}
