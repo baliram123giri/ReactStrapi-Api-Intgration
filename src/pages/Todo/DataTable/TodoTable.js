@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Button, Table } from 'antd';
 import { deleteTodo, getTodoList } from '../services';
 import { globlContext } from '../../../Provider/Provider';
-import { REFETCH_TODO_DATA } from '../../../Provider/Actions';
-
-
+import { REFETCH_TODO_DATA, UPDATE_TODO_FORM_DATA } from '../../../Provider/Actions';
+import { MdDelete } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
 };
@@ -14,13 +14,19 @@ const TodoTable = () => {
     const [data, setData] = useState([])
     const [selectedRow, setSelectedRow] = useState([])
     const [loading, setLoading] = useState(false)
+    const [isActive, setIsActive] = useState(null)
+
     //using context api
     const { dispatch } = useContext(globlContext)
 
     async function listOfTodos() {
-        const data = await getTodoList()
-        const newData = data.data.map(({ id, attributes }) => ({ id, ...attributes }))
-        setData(newData)
+        try {
+            const data = await getTodoList()
+            const newData = data.data.map(({ id, attributes }) => ({ id, ...attributes }))
+            setData(newData)
+        } catch (error) {
+            console.log(error?.response)
+        }
     }
 
     useEffect(() => {
@@ -38,11 +44,17 @@ const TodoTable = () => {
         setLoading(false)
     }
     async function singleDeleteHandler(value) {
+        setIsActive(value)
         setLoading(true)
         await deleteTodo(value)
         await listOfTodos()
         setSelectedRow([])
         setLoading(false)
+        setIsActive(null)
+    }
+
+    async function editHandler(value) {
+        dispatch({ type: UPDATE_TODO_FORM_DATA, payload: value })
     }
 
     const columns = [
@@ -71,7 +83,10 @@ const TodoTable = () => {
             title: 'Action',
             dataIndex: '',
             key: 'x',
-            render: (_, record) => <button onClick={async () => await singleDeleteHandler(record?.id)}> {loading ? "Loading..." : "Delete"}</button>,
+            render: (_, record) => <div className=' d-flex  align-items-center gap-1'>
+                <button className='border bg-none rounded-1 p-1 d-flex justify-content-center align-items-center' onClick={async () => await singleDeleteHandler(record?.id)}> {loading && isActive === record?.id ? "Loading..." : <MdDelete />}</button>
+                <button className='border bg-none rounded-1 p-1 d-flex justify-content-center align-items-center' onClick={async () => await editHandler(record)}> <MdEdit /></button>
+            </div>,
         },
     ];
 
