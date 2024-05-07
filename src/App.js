@@ -1,14 +1,13 @@
 
-import './App.css';
-import Provider from './Provider/Provider';
-import Todo from './pages/Todo/Todo';
+import React from 'react'
+import { Header } from './Components/Header/Header'
 
-function App() {
+const App = () => {
   return (
-    <Provider>
-      <Todo />
-    </Provider>
-  );
+    <div>
+      <Header />
+    </div>
+  )
 }
 
-export default App;
+export default App
