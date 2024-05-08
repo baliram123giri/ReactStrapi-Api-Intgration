@@ -1,9 +1,30 @@
 import { Modal } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Locations from './Locations'
+import { locationList } from './service'
+import { useDispatch, useSelector } from 'react-redux'
+import { UPDATE_LOCATION_DATA } from '../../Provider/reducers/GlobalReucer/globalReducer'
 
 export const Header = () => {
     const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
+    //redux
+    const dispatch = useDispatch()
+    //using redux
+    const { activeLoaction } = useSelector((state) => state?.globalReducer)
+
+
+    useEffect(() => {
+        async function getData() {
+            setLoading(true)
+            const result = await locationList()
+            dispatch({ type: UPDATE_LOCATION_DATA, payload: result || [] })
+            setLoading(false)
+        }
+        getData()
+    }, [dispatch])
+
+
     return (
         <header className='w-[80%] mx-auto py-2  '>
             <div className='flex justify-between items-center flex-wrap'>
@@ -15,7 +36,7 @@ export const Header = () => {
                 <div className="w-full lg:w-[50%]">
                     <nav>
                         <ul className='flex  justify-end items-center gap-2 flex-wrap text-[12px]'>
-                            <li><button onClick={() => setOpen(true)} className='border border-primary px-2 py-1 rounded-[3px] text-primary '>AHEMADABAD</button></li>
+                            <li><button onClick={() => setOpen(true)} className='border border-primary px-2 py-1 rounded-[3px] text-primary uppercase'>{loading ? "Loading..." : activeLoaction}</button></li>
                             <li className='cursor-pointer hover:text-orange-300'><span>Need Help</span></li>
                             <li className='cursor-pointer  hover:text-orange-300'><span>Login-SignUp</span></li>
                         </ul>
