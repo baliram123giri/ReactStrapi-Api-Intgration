@@ -1,15 +1,29 @@
 import { Search } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UPDATE_ACTIVE_DOCTOR_CATRGORY } from "../../Provider/reducers/HomePage/homepageReducer";
 
-const SearchInput = () => {
+const SearchInput = ({ searchApiCall }) => {
     const [showSearchBox, setSearchBox] = useState(false);
+    const [searcInput, setSearchInput] = useState("")
     const { doctosList, activeDoctorsCategory } = useSelector(
         (state) => state?.homepageReducer
     );
+
     const dispatch = useDispatch();
-    console.log(activeDoctorsCategory);
+
+    useEffect(() => {
+        if (searcInput) {
+            let query = `&filters[name][$contains]=${searcInput}`
+            const searchTime = setTimeout(() => {
+                searchApiCall(query)
+            }, 700);
+            return () => clearTimeout(searchTime)
+        } else {
+            searchApiCall()
+        }
+    }, [searcInput, searchApiCall])
+
     return (
         <div>
             <div
@@ -18,6 +32,17 @@ const SearchInput = () => {
             >
                 <Search size={16} />
                 <input
+                    value={activeDoctorsCategory}
+                    onChange={(event) => {
+                        //active the doctor
+                        dispatch({
+                            type: UPDATE_ACTIVE_DOCTOR_CATRGORY,
+                            payload: event.target.value,
+                        });
+
+                        setSearchInput(event.target.value)
+
+                    }}
                     onFocus={() => setSearchBox(true)}
                     onBlur={() => {
                         setTimeout(() => {
@@ -43,13 +68,13 @@ const SearchInput = () => {
                                         }}
                                         key={ele?.id}
                                         className={`cursor-pointer  items-center ${activeDoctorsCategory === ele?.name
-                                                ? "bg-dark-primary text-white"
-                                                : " hover:bg-neutral-200 border-b"
+                                            ? "bg-dark-primary text-white"
+                                            : " hover:bg-neutral-200 border-b"
                                             } `}
                                     >
                                         <div className="flex justify-between p-2 ">
                                             <h6>{ele?.name}</h6>
-                                            <h6>{ele?.doctorCategory?.name}</h6>
+                                            <h6>{ele?.doctor_categories[0]?.name}</h6>
                                         </div>
                                     </li>
                                 );
