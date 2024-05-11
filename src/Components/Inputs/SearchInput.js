@@ -9,20 +9,23 @@ const SearchInput = ({ searchApiCall }) => {
     const { doctosList, activeDoctorsCategory } = useSelector(
         (state) => state?.homepageReducer
     );
+    const { activeLoaction } = useSelector(state => state?.globalReducer)
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (searcInput) {
-            let query = `&filters[name][$contains]=${searcInput}`
+            let query = `&filters[name][$contains]=${searcInput}&filters[hospitals][locations][name]=${activeLoaction}`
             const searchTime = setTimeout(() => {
                 searchApiCall(query)
             }, 700);
             return () => clearTimeout(searchTime)
-        } else {
-            searchApiCall()
+        } else if (activeLoaction) {
+            let query = `&filters[hospitals][locations][name]=${activeLoaction}`
+            searchApiCall(query)
+
         }
-    }, [searcInput, searchApiCall])
+    }, [searcInput, searchApiCall, activeLoaction])
 
     return (
         <div>

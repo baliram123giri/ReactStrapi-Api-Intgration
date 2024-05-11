@@ -4,7 +4,7 @@ import { baseUrl } from "../../lib/helper"
 export const doctosList = async (query) => {
 
     try {
-        const { data } = await axios.get(`${baseUrl}/doctors?populate=doctor_categories${query || ""}`)
+        const { data } = await axios.get(`${baseUrl}/doctors?populate=doctor_categories&fields[0]=name${query || ""}`)
         return data?.data
 
     } catch (error) {
@@ -15,6 +15,16 @@ export const hospitalsList = async (query) => {
 
     try {
         const { data } = await axios.get(`${baseUrl}/hospitals?fields[0]=name${query || ""}`)
+        return data?.data
+
+    } catch (error) {
+        console.log(error.response)
+    }
+}
+export const doctosDetailsServiceList = async (query) => {
+
+    try {
+        const { data } = await axios.get(`${baseUrl}/doctors?fields[0]=name&fields[1]=experience&fields[2]=education&populate[avatar][fields][0]=url&populate[languages][fields][0]=name&populate[hospitals][fields][0]=name&populate[doctor_categories][fields][0]=name${query || ""}`)
         return data?.data
 
     } catch (error) {
