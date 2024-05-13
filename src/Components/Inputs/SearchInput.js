@@ -35,7 +35,7 @@ const SearchInput = ({ searchApiCall }) => {
             >
                 <Search size={16} />
                 <input
-                    value={activeDoctorsCategory}
+                    value={activeDoctorsCategory || ""}
                     onChange={(event) => {
                         //active the doctor
                         dispatch({
