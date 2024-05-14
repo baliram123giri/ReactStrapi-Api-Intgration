@@ -4,6 +4,7 @@ import Locations from './Locations'
 import { locationList } from './service'
 import { useDispatch, useSelector } from 'react-redux'
 import { UPDATE_LOCATION_DATA } from '../../Provider/reducers/GlobalReucer/globalReducer'
+import { Link } from 'react-router-dom'
 
 export const Header = () => {
     const [open, setOpen] = useState(false)
@@ -30,7 +31,7 @@ export const Header = () => {
             <div className='flex justify-between items-center flex-wrap'>
                 <div className="w-full  lg:w-[30%] flex justify-center">
                     <div className='w-[120px]'>
-                        <img width={"100%"} src="https://www.askapollo.com/assets/images/askapollo-logo.png" alt="" />
+                        <Link to={"/"}> <img width={"100%"} src="https://www.askapollo.com/assets/images/askapollo-logo.png" alt="" /></Link>
                     </div>
                 </div>
                 <div className="w-full lg:w-[50%]">
