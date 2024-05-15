@@ -25,7 +25,7 @@ const DoctorsDetailsList = () => {
             query += ` &filters[Gender][$eq]=${doctorsFilter?.gender}`
         }
         if (doctorsFilter?.language) {
-            query += ` &filters[languages][id][$eq]=${doctorsFilter?.language}`
+            query += ` &filters[languages][id][$in]=${doctorsFilter?.language}`
         }
         if (doctorsFilter?.sort) {
             query += `&sort[1]=experience:${doctorsFilter?.sort === "0" ? "desc" : "asc"}`

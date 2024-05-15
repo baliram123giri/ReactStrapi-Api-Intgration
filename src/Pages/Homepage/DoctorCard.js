@@ -1,7 +1,6 @@
-import { useMutation } from '@tanstack/react-query'
+
 import { GraduationCap, Languages, MapPin } from 'lucide-react'
 import React from 'react'
-import { getDoctorDetails } from './service'
 import { useNavigate } from 'react-router-dom'
 
 const DoctorCard = ({ id, name, experience, education, avatar, languages = [], hospitals = [], doctor_categories = [] }) => {

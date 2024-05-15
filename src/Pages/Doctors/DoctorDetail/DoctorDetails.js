@@ -1,29 +1,36 @@
 import { useMutation } from "@tanstack/react-query";
 import { GraduationCap, Languages, MapPin, Share2 } from "lucide-react";
 import React, { useEffect } from "react";
-import { getDoctorDetails } from "../../Homepage/service";
-import { useLocation, useParams } from "react-router-dom";
+import { getDoctorDetails, getDoctorSlots } from "../../Homepage/service";
+import { useParams } from "react-router-dom";
 import Loader from "../../../Components/Loader/Loader";
-
+import { BlocksRenderer } from "@strapi/blocks-react-renderer";
+import "./doctor.css"
+import BookSlots from "./BookSlots";
 const DoctorDetails = () => {
     //api call
     const { id } = useParams();
     const { mutateAsync, isPending, data } = useMutation({
         mutationFn: getDoctorDetails,
     });
+    //slots information
+    const { mutateAsync: mutateAsyncSlots, isPending: isPendingSlots, data: dataSlots } = useMutation({ mutationFn: getDoctorSlots })
+
     useEffect(() => {
         mutateAsync(id);
-    }, []);
+        mutateAsyncSlots(id)
+    }, [mutateAsync, mutateAsyncSlots, id]);
+
     if (isPending) return <Loader />;
     if (!data) return <>Doctors Details Not Found!</>;
-    console.log(data);
+
     return (
-        <section className="w-[80%] mx-auto">
+        <section className="w-[80%] mx-auto flex gap-5 flex-wrap justify-between ">
             <div className="w-full lg:w-[60%]">
                 <div className="bg-white p-4 border shadow my-2 flex  rounded-md gap-4 flex-wrap">
                     <div className="w-[100px] border p-1 h-[100px] rounded-full">
                         <img
-                       
+
                             className="object-cover h-full w-full  object-top rounded-full"
                             src={`http://localhost:1337${data?.avatar?.url}`}
                             alt=""
@@ -83,6 +90,17 @@ const DoctorDetails = () => {
                         <Share2 />
                     </div>
                 </div>
+                {data?.about && <div>
+                    <h5 className="text-3xl font-semibold">About</h5>
+                    <BlocksRenderer content={data?.about} />
+                </div>}
+            </div>
+            <div className="w-full lg:w-[37%]">
+                {isPendingSlots ? "Loading..." : "Available..."}
+                {/* <pre className="text-wrap">
+                    {JSON.stringify(dataSlots)}
+                </pre> */}
+                <BookSlots />
             </div>
         </section>
     );
