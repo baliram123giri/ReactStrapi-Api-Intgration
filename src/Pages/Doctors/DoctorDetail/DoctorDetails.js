@@ -23,7 +23,7 @@ const DoctorDetails = () => {
 
     if (isPending) return <Loader />;
     if (!data) return <>Doctors Details Not Found!</>;
-
+    console.log(dataSlots)
     return (
         <section className="w-[80%] mx-auto flex gap-5 flex-wrap justify-between ">
             <div className="w-full lg:w-[60%]">
@@ -100,7 +100,7 @@ const DoctorDetails = () => {
                 {/* <pre className="text-wrap">
                     {JSON.stringify(dataSlots)}
                 </pre> */}
-                <BookSlots />
+               {dataSlots &&  <BookSlots end={dataSlots[0]?.end} start={dataSlots[0]?.start} />}
             </div>
         </section>
     );
