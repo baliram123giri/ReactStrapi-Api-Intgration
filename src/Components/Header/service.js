@@ -9,3 +9,11 @@ export const locationList = async () => {
         console.log(error.response)
     }
 }
+export const loginApi = async (values) => {
+    try {
+        const { data } = await axios.post(`${baseUrl}/auth/local`, values)
+        return data
+    } catch (error) {
+        return error.response
+    }
+}
